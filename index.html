@@ -6,12 +6,11 @@
     <title>Abdurrahman - Personal Portfolio</title>
     
     <!-- TAG FAVICON -->
-    <!-- Ganti URL placeholder ini dengan link ke file favicon.png Anda -->
     <link rel="icon" type="image/png" href="favicon.png" onerror="this.href='https://placehold.co/16x16/00CFFF/010D18?text=A'">
     
-    <!-- Memuat Tailwind CSS untuk styling modern dan responsif -->
+    <!-- Memuat Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Memuat Font Awesome untuk ikon -->
+    <!-- Memuat Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Menggunakan font Inter secara default */
@@ -20,16 +19,67 @@
         }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #010D18; /* Biru sangat gelap, mendekati hitam */
-            color: #E2E8F0; /* Teks terang */
+            
+            /* --- PENGATURAN BACKGROUND GLOBAL DARI background.png --- */
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Efek parallax pada background */
+            background-color: #010D18; /* Warna fallback jika gambar gagal dimuat */
+            color: #E2E8F0; 
             overflow-x: hidden;
+        }
+        
         .text-accent {
-            color: #00CFFF; /* Warna biru cerah sebagai aksen */
+            color: #00CFFF; 
         }
-        }
+        /* Mengubah warna kartu menjadi lebih transparan, agar background terlihat */
         .bg-card {
-            background-color: #081C2E; /* Warna latar belakang untuk kartu atau bagian dalam */
+            background-color: rgba(8, 28, 46, 0.7); /* Lebih transparan dari sebelumnya */
+            backdrop-filter: blur(4px); /* Efek blur ringan */
         }
+        /* Menghapus background section yang sebelumnya solid */
+        #about, #gallery, #contact {
+            background-color: transparent !important;
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+        
+        /* --- STYLING NAVBAR --- */
+        header {
+            background-color: rgba(1, 13, 24, 0.9); /* Sedikit transparan agar background terlihat */
+            backdrop-filter: blur(8px); /* Blur lebih kuat untuk navbar */
+            transition: transform 0.3s ease-in-out; 
+        }
+        .navbar-hidden {
+            transform: translateY(-100%);
+        }
+
+        /* --- STYLING KHUSUS HOME SECTION (Diperlukan overlay untuk kontras) --- */
+        #home {
+            position: relative; 
+            background-image: none; /* Dihapus dari sini karena sudah di body */
+        }
+        /* Overlay khusus di bagian home agar teks di atasnya sangat jelas */
+        #home::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Overlay yang lebih pekat di hero section */
+            background-color: rgba(1, 13, 24, 0.75); 
+            z-index: 1;
+        }
+        /* Memastikan konten (teks, foto) di atas overlay */
+        #home > div { 
+            position: relative;
+            z-index: 2;
+        }
+        /* --- AKHIR STYLING HOME SECTION --- */
+
+
         /* Efek animasi sederhana saat scroll */
         .fade-in-up {
             opacity: 0;
@@ -40,7 +90,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-        /* Styling untuk garis bawah tebal pada headline */
         .headline-line::after {
             content: '';
             display: block;
@@ -50,34 +99,69 @@
             margin-top: 10px;
         }
 
-        /* Styling khusus untuk gambar placeholder (menggantikan foto Anda) */
         .placeholder-image {
-            background-color: #041221;
+            background-color: rgba(4, 18, 33, 0.8);
             border: 2px solid #00CFFF;
-            /* Bentuk melingkar/elips seperti di desain inspirasi */
             border-radius: 40% 60% 70% 30% / 50% 50% 50% 50%; 
             object-fit: cover;
             width: 100%;
             height: 100%;
         }
-        /* Hapus styling project-image-placeholder karena diganti dengan img */
         .project-img {
             width: 100%;
-            height: 200px; /* Tinggi tetap agar konsisten */
-            object-fit: cover; /* Memastikan gambar mengisi area tanpa terdistorsi */
+            height: 200px; 
+            object-fit: cover; 
             border-radius: 0.75rem 0.75rem 0 0;
-            margin-bottom: 0; /* Hapus margin bawah karena sudah ada padding di .p-6 */
+            margin-bottom: 0; 
+        }
+
+        /* Styling Galeri */
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 207, 255, 0.1);
+        }
+        .gallery-img {
+            width: 100%;
+            height: 300px; 
+            object-fit: cover;
+            transition: transform 0.5s ease; 
+        }
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 207, 255, 0.85); 
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+        }
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.1); 
+        }
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        .overlay-text {
+            color: #010D18; 
+            font-weight: bold;
+            padding: 1rem;
         }
     </style>
 </head>
 <body class="selection:bg-accent selection:text-white">
 
     <!-- Navbar -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-[#010D18]/90 backdrop-blur-sm shadow-lg">
+    <header id="main-navbar" class="fixed top-0 left-0 right-0 z-50 shadow-lg">
         <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
-            <!-- LOGO DI NAVBAR -->
             <a href="#" class="flex items-center space-x-2">
-                <!-- Ganti URL placeholder ini dengan link ke file logo.png Anda -->
                 <img src="logo.png" alt="Logo Abdurrahman" class="h-8 w-8 rounded-full" 
                      onerror="this.onerror=null; this.src='https://placehold.co/32x32/00CFFF/010D18?text=A'; this.classList.remove('h-8', 'w-8'); this.classList.add('h-6','w-6', 'p-1', 'bg-accent', 'text-sm', 'font-bold')">
                 <span class="text-2xl font-bold text-accent">ABDURRAHMAN</span>
@@ -88,9 +172,11 @@
                 <a href="#about" class="hover:text-accent transition duration-300">ABOUT ME</a>
                 <a href="#experience" class="hover:text-accent transition duration-300">EXPERIENCE</a>
                 <a href="#projects" class="hover:text-accent transition duration-300">PROJECTS</a>
+                <a href="#gallery" class="hover:text-accent transition duration-300">GALLERY</a>
                 <a href="#contact" class="hover:text-accent transition duration-300">CONTACT</a>
+                
             </nav>
-            <a href="https://www.gmail.com/" class="hidden md:block border border-accent text-accent px-4 py-2 rounded-lg hover:bg-accent hover:text-[#010D18] transition duration-300">
+            <a href="gmail.com" class="hidden md:block border border-accent text-accent px-4 py-2 rounded-lg hover:bg-accent hover:text-[#010D18] transition duration-300">
                 LET'S TALK
             </a>
         </div>
@@ -98,39 +184,39 @@
 
     <main class="pt-24">
 
-        <!-- 1. HERO SECTION -->
-        <section id="home" class="max-w-6xl mx-auto px-6 py-16 md:py-32 flex flex-col lg:flex-row items-center justify-between min-h-screen">
-            <div class="lg:w-1/2 mb-10 lg:mb-0 fade-in-up">
-                <p class="text-sm font-medium uppercase text-accent mb-2">ABDURRAHMAN</p>
-                <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-4">
-                    HAY! I'M <span class="text-white">ABDURRAHMAN</span>
-                </h1>
-                <h2 class="text-3xl md:text-4xl font-bold text-accent mb-6">
-                    I'M A FOCUSED HIGH SCHOOL STUDENT
-                </h2>
-                <p class="text-lg text-gray-400 mb-8">
-                    Seorang siswa menengah atas yang sedang fokus mengembangkan **soft skill maupun hard skill**. Saya mencari peluang untuk bisa belajar dan mengembangkan kemampuan tersebut, sebagai pondasi untuk menuju dunia perkuliahan.
-                </p>
-                
-                <div class="flex items-center space-x-6">
-                    <a href="#contact" class="px-7 py-3 font-semibold rounded-lg bg-accent text-[#010D18] hover:bg-opacity-90 transition duration-300 shadow-xl">
-                        GET IN TOUCH
-                    </a>
-                    <!-- Social Icons -->
-                    <div class="flex space-x-4 text-xl">
-                        <a href="https://instagram.com/abidrhmnn_" target="_blank" class="hover:text-accent transition duration-300" aria-label="Instagram">
-                            <i class="fab fa-instagram"></i>
+        <!-- 1. HERO SECTION (Menggunakan background body + overlay) -->
+        <section id="home" class="px-6 py-16 md:py-32 flex flex-col lg:flex-row items-center justify-between min-h-screen">
+            <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between w-full"> 
+                <div class="lg:w-1/2 mb-10 lg:mb-0 fade-in-up">
+                    
+                    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-4">
+                        HAY! I'M <span class="text-white">ABDURRAHMAN</span>
+                    </h1>
+                    <h2 class="text-3xl md:text-4xl font-bold text-accent mb-6">
+                        I'M A FOCUSED HIGH SCHOOL STUDENT
+                    </h2>
+                    <p class="text-lg text-gray-400 mb-8">
+                        Seorang siswa menengah atas yang sedang fokus mengembangkan **soft skill maupun hard skill**. Saya mencari peluang untuk bisa belajar dan mengembangkan kemampuan tersebut, sebagai pondasi untuk menuju dunia perkuliahan.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-8">
+                        <a href="#contact" class="hidden md:block border border-accent text-accent px-4 py-2 rounded-lg hover:bg-accent hover:text-[#010D18] transition duration-300">
+                            GET IN TOUCH
                         </a>
-                        <a href="mailto:abidk120708@gmail.com" class="hover:text-accent transition duration-300" aria-label="Gmail">
-                            <i class="fas fa-envelope"></i>
-                        </a>
+                        <div class="flex space-x-4 text-xl ml-1">
+                            <a href="https://instagram.com/abidrhmnn_" target="_blank" class="hover:text-accent transition duration-300" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="gmail.com" class="hover:text-accent transition duration-300" aria-label="Gmail">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="lg:w-5/12 w-full flex justify-center fade-in-up" style="transition-delay: 0.2s;">
-                <!-- Placeholder untuk foto, ganti dengan foto Anda -->
-                <img src="abid.png" alt="Foto Abdurrahman" class="placeholder-image shadow-2xl">
+                <div class="lg:w-5/12 w-full flex justify-center fade-in-up" style="transition-delay: 0.2s;">
+                    <img src="classmet.png" alt="Foto Abdurrahman" class="placeholder-image shadow-2xl">
+                </div>
             </div>
         </section>
 
@@ -139,11 +225,11 @@
             <div class="max-w-6xl mx-auto px-6 flex flex-col lg:flex-row items-center justify-between">
                 <div class="lg:w-5/12 w-full mb-10 lg:mb-0 flex justify-center fade-in-up">
                     <!-- Placeholder untuk foto, ganti dengan foto Anda -->
-                    <img src="futsal2.png" alt="Foto Abdurrahman profesional" class="w-full max-w-sm rounded-lg shadow-2xl border border-accent/20">
+                    <img src="abid.png" alt="Foto Abdurrahman profesional" class="w-full max-w-sm rounded-lg shadow-2xl border border-accent/20">
                 </div>
 
                 <div class="lg:w-1/2 fade-in-up" style="transition-delay: 0.2s;">
-                    <p class="text-sm font-medium uppercase text-accent mb-3">ABOUT US</p>
+                    <p class="text-sm font-medium uppercase text-accent mb-3">ABOUT ME</p>
                     <h2 class="text-4xl md:text-5xl font-bold mb-6 headline-line">
                         I AM AVAILABLE FOR LEARNING OPPORTUNITIES
                     </h2>
@@ -202,11 +288,12 @@
             </div>
 
             <!-- PROJECTS/EXPERIENCE GRID -->
-            <div class="grid md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-5 md:grid-cols-3 gap-3 md:gap-6">
                 
                 <!-- Pengalaman 1: Bendahara -->
                 <div class="project-card bg-card p-6 rounded-xl shadow-xl border-t-4 border-accent fade-in-up">
-                    <div class="text-4xl text-accent mb-4"><i class="fas fa-sack-dollar"></i></div>
+                     <img src="bendahara.png" >
+                    <div class="text-4xl text-accent mb-4 mt-7"><i class="fas fa-dollar"></i></div>
                     <h4 class="text-xl font-bold mb-2 text-white">Bendahara Event Sekolah</h4>
                     <p class="text-sm text-gray-400 mb-3">NLS SEKOLAH AL BUNYAN | Durasi: 3 Bulan</p>
                     <p class="text-gray-400 text-sm">Melakukan pembuatan anggaran untuk proposal, mengatur keluar masuk dana. Pembelajaran kunci: memahami cara mengatur keuangan.</p>
@@ -214,7 +301,8 @@
 
                 <!-- Pengalaman 2: Prestasi Futsal -->
                 <div class="project-card bg-card p-6 rounded-xl shadow-xl border-t-4 border-accent fade-in-up" style="transition-delay: 0.2s;">
-                    <div class="text-4xl text-accent mb-4"><i class="fas fa-trophy"></i></div>
+                    <img src="tropy.png" >
+                    <div class="text-4xl text-accent mb-4 mt-7"><i class="fas fa-trophy"></i></div>
                     <h4 class="text-xl font-bold mb-2 text-white">Meraih 3rd di Kejuaraan Futsal</h4>
                     <p class="text-sm text-gray-400 mb-3">Nueclears, SMA Nurul Fikri Bogor.</p>
                     <p class="text-gray-400 text-sm">Pencapaian dalam kompetisi olahraga tim, menunjukkan semangat kolaborasi dan kerja keras.</p>
@@ -222,53 +310,96 @@
 
                 <!-- Pengalaman 3: EO Event Sekolah -->
                 <div class="project-card bg-card p-6 rounded-xl shadow-xl border-t-4 border-accent fade-in-up" style="transition-delay: 0.4s;">
-                    <div class="text-4xl text-accent mb-4"><i class="fas fa-calendar-check"></i></div>
+                    <img src="event.png" >
+                    <div class="text-4xl text-accent mb-4 mt-7"><i class="fas fa-calendar-check"></i></div>
                     <h4 class="text-xl font-bold mb-2 text-white">Keterlibatan EO Event Sekolah</h4>
                     <p class="text-sm text-gray-400 mb-3">Pengalaman Organisasi</p>
                     <p class="text-gray-400 text-sm">Aktif ikut serta menjadi Event Organizer (EO) dalam lingkup event sekolah, mengasah kemampuan kepemimpinan dan manajemen proyek.</p>
                 </div>
             </div>
         </section>
+ 
+        <!-- 6. GALERI KARYA (GALLERY SECTION) - BARU DITAMBAHKAN -->
+        <section id="gallery" class="bg-[#041221] py-20">
+            <div class="max-w-6xl mx-auto px-6">
+                <p class="text-sm font-medium uppercase text-accent mb-3 text-center">VISUAL COLLECTION</p>
+                <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center headline-line mx-auto">
+                    GALERI KARYA TERBAIK
+                </h2>
 
-        <!-- 5. PROYEK KREATIF (PROJECTS SECTION) -->
-        <section id="projects" class="max-w-6xl mx-auto px-6 py-20">
-            <p class="text-sm font-medium uppercase text-accent mb-3 text-center">MY WORK</p>
-            <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center headline-line mx-auto">
-                PROYEK KREATIF TERBARU
-            </h2>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                
-                <!-- Proyek Contoh 1: Desain Poster (Canva) -->
-                <div class="project-card bg-card rounded-xl shadow-xl fade-in-up">
-                    <!-- Ganti URL placeholder ini dengan link gambar poster Anda -->
-                    <img src="ONE.png" 
-                         alt="Desain Poster Kampanye Sekolah" 
-                         class="project-img">
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold mb-2 text-white">Desain Poster </h4>
-                        <p class="text-sm text-accent mb-3">Desain Grafis | Menggunakan Canva</p>
-                        <p class="text-gray-400 text-sm mb-4">Pembuatan materi visual untuk membangun personal branding, untuk menarik audiens bekerja sama.</p>
-                        <a href="#" class="text-accent hover:underline text-sm font-semibold">Lihat Proyek </a>
+                <!-- Grid Galeri 2x2 atau 3x2, diatur responsif -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                    
+                    <!-- Item Galeri 1 (Desain) -->
+                    <div class="fade-in-up">
+                        <img src="Dibasuno.png" 
+                             alt="Karya Desain Canva 1" 
+                             class="gallery-img cursor-pointer"
+                             onclick="alert('Ini adalah karya desain poster/infografis.')">
                     </div>
+
+                    <!-- Item Galeri 2 (Fotografi) -->
+                    <div class="fade-in-up" style="transition-delay: 0.1s;">
+                        <img src="tea.png" 
+                             alt="Karya Fotografi Lightroom 2" 
+                             class="gallery-img cursor-pointer"
+                             onclick="alert('Ini adalah hasil editing foto lanskap.')">
+                    </div>
+
+                    <!-- Item Galeri 3 (Desain) -->
+                    <div class="fade-in-up" style="transition-delay: 0.2s;">
+                        <img src="1.png" 
+                             alt="Karya Desain Canva 3" 
+                             class="gallery-img cursor-pointer"
+                             onclick="alert('Ini adalah karya visual campaign.')">
+                    </div>
+                    
+                    <!-- Item Galeri 4 (Fotografi) -->
+                    <div class="fade-in-up" style="transition-delay: 0.3s;">
+                        <img src="cafe.png" 
+                             alt="Karya Fotografi Lightroom 4" 
+                             class="gallery-img cursor-pointer"
+                             onclick="alert('Ini adalah foto portrait yang diedit.')">
+                    </div>
+
                 </div>
-
-                <!-- Proyek Contoh 2: Koleksi Foto Lanskap (Lightroom) -->
-                <div class="project-card bg-card rounded-xl shadow-xl fade-in-up" style="transition-delay: 0.2s;">
-                    <!-- Ganti URL placeholder ini dengan link gambar fotografi Anda -->
-                    <img src="bandung.png" 
-                         alt="Koleksi Foto Lanskap Bogor" 
-                         class="project-img">
-                    <div class="p-6">
-                        <h4 class="text-xl font-bold mb-2 text-white">Koleksi Foto Lanskap "Bandung Malam Hari"</h4>
-                        <p class="text-sm text-accent mb-3">Fotografi | Menggunakan Adobe Lightroom</p>
-                        <p class="text-gray-400 text-sm mb-4">Seri fotografi lanskap yang diedit menggunakan Adobe Lightroom, berfokus pada teknik *color grading* dan komposisi.</p>
-                        <a href="https://instagram.com/dibavisuality"  class="hidden md:block border border-accent text-accent px-4 py-2 rounded-lg hover:bg-accent hover:text-[#010D18] transition duration-300">Lihat Proyek </a>
-                    </div>
+                
+                <div class="text-center mt-12 fade-in-up" style="transition-delay: 0.4s;">
+                    <!-- Tombol ini bisa dihubungkan ke halaman Galeri penuh atau Instagram -->
+                    <a href="https://instagram.com/abidrhmnn_" target="_blank" class="px-6 py-3 font-semibold rounded-lg bg-gray-800 text-[#FFFFFF] hover:bg-blue-500 bg-opacity-90 transition duration-300 shadow-xl">
+                        VIEW MORE ON INSTAGRAM
+                    </a>
                 </div>
             </div>
         </section>
+            
+        <!-- 7. SPOTIFY SECTION (Kembali ke mode fokus Spotify) -->
+        <section id="spotify" class="py-20">
+            <div class="max-w-4xl mx-auto px-6">
+                <p class="text-sm font-medium uppercase text-accent mb-3 text-center">CURRENT VIBES</p>
+                <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center headline-line mx-auto">
+                    MY SPOTIFY 
+                </h2>
 
+                <div class="space-y-8">
+                    <!-- Playlist/Album 1 -->
+                    <div class="fade-in-up bg-card p-4 rounded-xl shadow-xl">
+                        <h3 class="text-2xl font-bold text-accent mb-4"> My Favorite Song </h3>
+                        <!-- Iframe Spotify Playlist Placeholder -->
+                       <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/1RM4jcne1iJXnxX1vuGJC0?utm_source=generator"
+                        width="100%"
+                         height="352" 
+                         frameBorder="0" 
+                         allowfullscreen="" 
+                         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                         loading="lazy">
+                        </iframe>
+                    </div>
+
+                    
+                </div>
+        
+                \
         <!-- 6. KONTAK (CONTACT) -->
         <section id="contact" class="bg-card py-20">
             <div class="max-w-3xl mx-auto px-6 text-center fade-in-up">
@@ -292,8 +423,79 @@
         </section>
     </main>
 
+      <!-- Scripts -->
+    <script>
+        const faders = document.querySelectorAll('.fade-in-up');
+        const appearOptions = { threshold: 0.1 };
+        const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('visible');
+                appearOnScroll.unobserve(entry.target);
+            });
+        }, appearOptions);
+        faders.forEach(fader => appearOnScroll.observe(fader));
+
+        // --- LOGIKA NAVBAR HILANG SAAT SCROLL ---
+        const navbar = document.querySelector('header');
+        let lastScrollTop = 0;
+        const navbarHeight = navbar.offsetHeight;
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
+                // Scroll Down -> Sembunyikan Navbar
+                navbar.classList.add('navbar-hidden');
+            } else {
+                // Scroll Up -> Tampilkan Navbar
+                navbar.classList.remove('navbar-hidden');
+            }
+            
+            // Efek bayangan saat tidak di paling atas
+            if (scrollTop > 50) {
+                navbar.classList.add('shadow-xl');
+            } else {
+                navbar.classList.remove('shadow-xl');
+            }
+
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Untuk mobile atau scroll negatif
+        });
+
+        function showModal(message) {
+            let modal = document.getElementById('custom-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'custom-modal';
+                modal.className = 'fixed inset-0 z-[100] bg-black/70 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none';
+                modal.innerHTML = `
+                    <div class="bg-card p-6 rounded-xl shadow-2xl max-w-sm mx-4 transform scale-95 transition-transform duration-300">
+                        <p class="text-white text-lg mb-4">${message}</p>
+                        <button onclick="document.getElementById('custom-modal').classList.add('opacity-0', 'pointer-events-none'); document.getElementById('custom-modal').classList.remove('opacity-100')" 
+                                class="w-full px-4 py-2 bg-accent text-[#010D18] font-bold rounded-lg hover:bg-opacity-80">
+                            Close
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            } else {
+                modal.querySelector('p').innerText = message;
+            }
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.querySelector('div').classList.add('scale-100');
+                modal.querySelector('div').classList.remove('scale-95');
+            }, 10);
+        }
+
+        document.querySelectorAll('.gallery-overlay').forEach(overlay => {
+            overlay.setAttribute('onclick', overlay.getAttribute('onclick').replace('alert(', 'showModal('));
+        });
+    </script>
+    
     <footer class="text-center py-8 text-sm text-gray-500 bg-[#000B1A]">
-        &copy; 2024 Abdurrahman..
+        &copy; 2025 Abdurrahman.
     </footer>
 
     <!-- JavaScript untuk efek scroll animasi (Fade In Up) -->
